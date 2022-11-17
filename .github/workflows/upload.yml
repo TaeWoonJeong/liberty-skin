@@ -1,0 +1,26 @@
+name: Upload Test
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+
+    env:
+      S3_BUCKET_NAME: taewoon-s3
+      PROJECT_NAME: contest-server
+
+    steps:
+      - name: upload ec2
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          ARGS: "-rltgoDzvO"
+          SOURCE: "dist/"
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          TARGET: ${{ secrets.REMOTE_TARGET }}
+          EXCLUDE: "/.github"
